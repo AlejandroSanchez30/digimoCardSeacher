@@ -1,1 +1,1 @@
-# digimoCardSeacher
+# Digimon Card Searcher
