@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Digimon Card Searcher</title>
+  </head>
+  <body>
+    <div id="search" class="search">
+       <form action="">
+        <h1>Search for a card</h1>
+        <input type="text" placeholder="Agumon" id="searchField">
+        <button type="button" id="searchButton">Search</button>
+       </form>
+
+       <div id="filters">
+        <input type="radio" name="" id="red">
+        <label for="red">Red</label>
+
+        <input type="radio" name="" id="blue">
+        <label for="blue">Blue</label>
+
+        <input type="radio" name="" id="yellow">
+        <label for="yellow">yellow</label>
+
+        <input type="radio" name="" id="green">
+        <label for="green">Green</label>
+
+        <input type="radio" name="" id="purple">
+        <label for="purple">Purple</label>
+        
+        <input type="radio" name="" id="black">
+        <label for="black">Black</label>
+       </div>
+
+    </div>
+
+    <main>
+      <div id="card-container" class="card-container">
+        <div class="card">
+          <img
+            src="https://images.digimoncard.io/images/cards/BT1-001.jpg"
+            alt=""
+          />
+        </div>
+      </div>
+
+      <div id="info-container">
+         
+      </div>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
