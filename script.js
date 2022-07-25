@@ -32,13 +32,28 @@ colorFilters.forEach(color => {
                 else{
                     parameters +=`color=${color.id}`;
                 }
-                
             }
         }
-            
+        else{
+            if(textField.value.length =! 0)
+            {
+                parameters += `n=${textField.value}`;
+                const colorActive = (checkActiveFilter(colorFilters));
+                if(colorActive != null)
+                {
+                    parameters += `&color=${colorActive}`;
+                }
+            }
+            else{
+                const colorActive = (checkActiveFilter(colorFilters));
+                if(colorActive != null)
+                {
+                    parameters += `&color=${colorActive}`;
+                }
+            }
+        }
             const data = await getData(parameters);
             showCards(data);
-    
 })});
 
 
@@ -59,7 +74,7 @@ typeFilters.forEach(type => {
                     parameters += `&color=${colorActive}&type=${type.id}`;
                 }
                 else{
-                    parameters +=`&type${type.id}`;
+                    parameters +=`&type=${type.id}`;
                 }
             }
             else{
@@ -72,6 +87,25 @@ typeFilters.forEach(type => {
                 }
                 else{
                     parameters += `type=${type.id}`
+                }
+            }
+        }
+        else{
+            if(textField.value.length != 0)
+            {
+                parameters += `n=${textField.value}`;
+                const activeFilter = checkActiveFilter(colorFilters);
+                if(activeFilter != null)
+                {
+                    parameters += `&color=${activeFilter}`;
+                }
+            }
+            else
+            {
+                const activeFilter = checkActiveFilter(colorFilters);
+                if(activeFilter != null)
+                {
+                    parameters += `&color=${activeFilter}`;
                 }
             }
         }
@@ -138,7 +172,7 @@ async function getData(urlParameters = "") {
     urlParameters += "&";
   }
   const response = await fetch(
-    `https://digimoncard.io/api-public/search.php?${urlParameters}sort=card_number&series=Digimon Card Game`
+    `https://digimoncard.io/api-public/search.php?${urlParameters}sort=card_set&series=Digimon Card Game`
   );
   const data = await response.json();
   return data;
