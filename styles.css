@@ -37,9 +37,14 @@ html{
     flex: row;
 }
 
+main{
+    display: flex;
+    justify-content: center;
+}
+
 .info-container{
     margin-top: 2rem;
-    width: 100vw;
+    width: 90vw;
     /* height: 300px; */
     border-radius: 5px;
     background-color: lightseagreen;

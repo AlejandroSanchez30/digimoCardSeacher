@@ -318,7 +318,7 @@ function createDetailedCardView(card){
         const mainEffectContainer = document.createElement('h2');
         const cardMainEffect = document.createTextNode('Main Effect: ');
         const meTextContainer = document.createElement('p');
-        const cardMEText = document.createTextNode(card.maineffect);
+        const cardMEText = document.createTextNode(replaceSpecialCharacters(card.maineffect));
         mainEffectContainer.appendChild(cardMainEffect);
         meTextContainer.appendChild(cardMEText);
         meTextContainer.appendChild(br);
@@ -333,7 +333,7 @@ function createDetailedCardView(card){
         sourceEffectContainer.appendChild(cardSourceEffect);
     
         const seTextContainer = document.createElement('p');
-        const CardSEText = document.createTextNode(card.soureeffect);
+        const CardSEText = document.createTextNode(replaceSpecialCharacters(card.soureeffect));
         seTextContainer.appendChild(CardSEText);
 
         detailedTextContainer.append(sourceEffectContainer);
@@ -343,12 +343,12 @@ function createDetailedCardView(card){
     detailedTextContainer.classList.add('detailedInfo');
     detailedInfo.appendChild(detailedTextContainer);
     infoContainer.appendChild(detailedInfo);
+}
+
+function replaceSpecialCharacters(text){
+    let modifiedText = text.replaceAll('&lt;','<<');
+    modifiedText = modifiedText.replaceAll('&gt;', '>>');
+    return modifiedText;
     
-
-
-   
-
-    
-
 }
 initialize();
