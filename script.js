@@ -5,7 +5,25 @@ const baseURL = 'https://digimoncard.io/api-public/search.php?sort=card_number&s
 const cardContainer = document.getElementById('card-container');
 const btnSearch = document.getElementById('searchButton');
 const textField = document.getElementById('searchField');
+const errorContainer = document.getElementById('errorMessage');
 
+const colorFilterContainer = document.getElementById('color-filters-container');
+const typeFilterContainer = document.getElementById('type-filter-container');
+const btnFilters = document.getElementById('buttonFilters');
+
+btnFilters.addEventListener('click', () => {
+    if(colorFilterContainer.classList.contains('hide'))
+    {
+        colorFilterContainer.classList.remove('hide');
+        typeFilterContainer.classList.remove('hide');
+    }
+    else
+    {
+        colorFilterContainer.classList.add('hide');
+        typeFilterContainer.classList.add('hide');
+    }
+   
+});
 
 const infoContainer = document.getElementById('info-container');
 textField.addEventListener('change', async (event) => {
@@ -43,7 +61,7 @@ colorFilters.forEach(color => {
             }
             else{
                 const activeType = checkActiveFilter(typeFilters);
-                console.log(activeType);
+               
                 if(activeType != null){
                     
                     parameters +=`&type=${activeType}&color=${color.id}`;
@@ -193,29 +211,45 @@ async function getData(urlParameters = "") {
   const response = await fetch(
     `https://digimoncard.io/api-public/search.php?${urlParameters}sort=card_set&series=Digimon Card Game`
   );
-  const data = await response.json();
-  return data;
+  if(response.status == 400){
+    const data = null;
+    return data;
+  }
+  else{
+    const data = await response.json();
+    return data;
+  }
 }
 
-function showCards(cards = "") {
-  cardContainer.innerHTML = "";
-  cards.forEach((card) => {
-    const cardDiv = document.createElement("div");
-    cardDiv.classList.add("card");
-    const cardImage = document.createElement("img");
-    cardImage.setAttribute("src", card.image_url);
-    cardImage.setAttribute("alt", card.name);
+function showCards(cards = null) {
+    console.log(cards);
+    cardContainer.innerHTML = "";
+    if(cards != null)
+    {
+        errorContainer.classList.add('hide');
+        cards.forEach((card) => {
+            const cardDiv = document.createElement("div");
+            cardDiv.classList.add("card");
+            const cardImage = document.createElement("img");
+            cardImage.setAttribute("src", card.image_url);
+            cardImage.setAttribute("alt", card.name);
+        
+            cardImage.addEventListener('click', () => {
+                console.log(card);
+               // cardContainer.classList.add('hide');
+                createDetailedCardView(card);
+                infoContainer.classList.remove('hide');
+            });
+            cardDiv.appendChild(cardImage);
+            cardContainer.appendChild(cardDiv);
+          });
+    }
+    else{
+        errorContainer.classList.remove('hide');
+       
+    }
 
-    cardImage.addEventListener('click', () => {
-        console.log(card);
-       // cardContainer.classList.add('hide');
-        createDetailedCardView(card);
-        infoContainer.classList.remove('hide');
-    });
-    
-    cardDiv.appendChild(cardImage);
-    cardContainer.appendChild(cardDiv);
-  });
+  
 }
 
 async function initialize(){
@@ -243,6 +277,10 @@ function createDetailedCardView(card){
     
     infoBar.appendChild(rarityContainer);
     
+    const cardColor = document.createElement('h4');
+    cardColor.innerHTML = `Color: ${card.color}`;
+    infoBar.appendChild(cardColor);
+
     const typeContainer = document.createElement('h4');
     const cardType = document.createTextNode(card.type);
     typeContainer.appendChild(cardType);
@@ -252,28 +290,32 @@ function createDetailedCardView(card){
     if(card.level != null)
     {
         const levelContainer = document.createElement('h4');
-        const cardLevel = document.createTextNode(`Level ${card.level}`);
+        const cardLevel = document.createTextNode(`Level: ${card.level}`);
         levelContainer.appendChild(cardLevel);
+        infoBar.appendChild(levelContainer);
     }
     
     if(card.dp != null)
     {
         const dpContainer = document.createElement('h4');
-        const cardDp = document.createTextNode(card.dp);
+        const cardDp = document.createTextNode(`DP: ${card.dp}`);
         dpContainer.appendChild(cardDp);
         infoBar.appendChild(dpContainer);
     }
 
+    
+
     const btnCloseDetailedButton = document.createElement('button');
-    const closeSymbol  = document.createTextNode('X');
-    btnCloseDetailedButton.appendChild(closeSymbol);
+    //const closeSymbol  = document.createTextNode('<i class="fa-solid fa-xmark"></i>');
+    btnCloseDetailedButton.innerHTML = '<i class="fa-solid fa-xmark"></i>'
+    //btnCloseDetailedButton.appendChild(closeSymbol);
+    btnCloseDetailedButton.classList.add('btnClose');
 
     btnCloseDetailedButton.addEventListener('click', () => 
     {
         infoContainer.classList.add('hide');
         cardContainer.classList.remove('hide');
     });
-
     infoBar.appendChild(btnCloseDetailedButton);
     
 
@@ -340,14 +382,25 @@ function createDetailedCardView(card){
         detailedTextContainer.append(seTextContainer);
     }
 
+    const packContainer = document.createElement('h2');
+    const packTitle = document.createTextNode('Artist: ')
+    const cardPackContainer = document.createElement('h4');
+    const cardPack = document.createTextNode(card.artist);
+
+    packContainer.appendChild(packTitle);
+    cardPackContainer.appendChild(cardPack);
+
     detailedTextContainer.classList.add('detailedInfo');
     detailedInfo.appendChild(detailedTextContainer);
     infoContainer.appendChild(detailedInfo);
+    infoContainer.appendChild(packContainer);
+    infoContainer.appendChild(cardPackContainer);
 }
 
 function replaceSpecialCharacters(text){
     let modifiedText = text.replaceAll('&lt;','<<');
     modifiedText = modifiedText.replaceAll('&gt;', '>>');
+    modifiedText = modifiedText.replaceAll('&#91;','[');
     return modifiedText;
     
 }

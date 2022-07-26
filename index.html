@@ -10,12 +10,17 @@
     <title>Digimon Card Searcher</title>
   </head>
   <body>
-    <div id="search" class="search">
+    <header>
+    
       <h1>Search for a card</h1>
+      
+    </header>
+    <div id="search" class="search">
       <input type="text" id="searchField" />
-      <button type="button" id="searchButton">Search</button>
+      <button type="button" id="searchButton" class="button-search">Search</button>
+      <button type="button" id="buttonFilters" class="button-search">Filters</button>
 
-      <div id="color-filters-container">
+      <div id="color-filters-container" class="hide">
         <input type="checkbox" name="" id="red" class="color-filter" />
         <label for="red">Red</label>
 
@@ -38,7 +43,7 @@
         <label for="white">White</label>
       </div>
 
-      <div class="type-filter-container">
+      <div id='type-filter-container' class="type-filter-container hide">
         <input type="checkbox" name="" id="tamer" class="type-filter" />
         <label for="tamer">Tamer</label>
 
@@ -55,23 +60,23 @@
 
     <main>
       <div id="card-container" class="card-container">
-        <div class="card">
+        <!-- <div class="card">
           <img
             class="cardImage"
             src="https://images.digimoncard.io/images/cards/BT1-001.jpg"
             alt=""
           />
-        </div>
+        </div> -->
       </div>
 
       <div id="info-container" class="info-container">
-       <!--  <div class="infobar">
+        <!-- <div class="infobar">
           <h4>BT01-011</h4>
           <h4>COMMON</h4>
-          <h4>Digi-Egg</h4>
+          <h4>Digi-Egg </h4>
           <h4>Mega</h4>
           <h4>1500</h4>
-          <button id="btnCloseDetailedInfo">X</button>
+          <button id="btnCloseDetailedInfo" class="btnClose"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="detailed-info">
           <img
@@ -94,11 +99,16 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum reprehenderit iusto et architecto odit numquam hic modi iste doloremque exercitationem?</p>
           </div>
         </div>
-        <h2>PACK NAME:</h2>
-        <h4>BT-00 NEW ADVENTURE</h4> -->
+        <div class="additional-info-container">
+          <h2>PACK NAME:</h2>
+          <h4>BT-00 NEW ADVENTURE</h4>
+        </div> -->
       </div>
     </main>
-
+    <div class="error hide" id="errorMessage">
+      <h1>NO CARDS FOUND</h1>
+    </div>
+    <script src="https://kit.fontawesome.com/d202a6f2f4.js" crossorigin="anonymous"></script>
     <script src="./script.js"></script>
   </body>
 </html>
