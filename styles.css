@@ -6,6 +6,8 @@
 
 html{
     font-size: 62.5%;
+    font-family: 'Poppins', sans-serif;
+
 }
 
 .card-container{
@@ -14,6 +16,7 @@ html{
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    width: 100vw;
     
 }
 
@@ -32,5 +35,37 @@ html{
 .filter{
     display: flex;
     flex: row;
+}
+
+.info-container{
+    margin-top: 2rem;
+    width: 100vw;
+    /* height: 300px; */
+    border-radius: 5px;
+    background-color: lightseagreen;
+    z-index: 3;
+    position: fixed;
+    top: 10vh;
+    opacity: 0.95;
+}
+
+
+.infobar{
+    display: flex;
+    padding: 5px;
+    justify-content: space-evenly;
+}
+
+.detailed-info{
+    display: flex;
+    margin: 10px;
+    gap: 15px;
+    
+}
+
+.detailed-info img{
+    width: 150px;
+    height: 200px;
+    border-radius: 10px;
 }
 

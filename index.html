@@ -4,68 +4,98 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css" />
+    
     <title>Digimon Card Searcher</title>
   </head>
   <body>
     <div id="search" class="search">
-      
-        <h1>Search for a card</h1>
-        <input type="text" id="searchField">
-        <button type="button" id="searchButton">Search</button>
-  
+      <h1>Search for a card</h1>
+      <input type="text" id="searchField" />
+      <button type="button" id="searchButton">Search</button>
 
-       <div id="color-filters-container">
-        <input type="checkbox" name="" id="red" class="color-filter">
+      <div id="color-filters-container">
+        <input type="checkbox" name="" id="red" class="color-filter" />
         <label for="red">Red</label>
 
-        <input type="checkbox" name="" id="blue" class="color-filter">
+        <input type="checkbox" name="" id="blue" class="color-filter" />
         <label for="blue">Blue</label>
 
-        <input type="checkbox" name="" id="yellow" class="color-filter">
+        <input type="checkbox" name="" id="yellow" class="color-filter" />
         <label for="yellow">yellow</label>
 
-        <input type="checkbox" name="" id="green" class="color-filter">
+        <input type="checkbox" name="" id="green" class="color-filter" />
         <label for="green">Green</label>
 
-        <input type="checkbox" name="" id="purple" class="color-filter">
+        <input type="checkbox" name="" id="purple" class="color-filter" />
         <label for="purple">Purple</label>
-        
-        <input type="checkbox" name="" id="black" class="color-filter">
+
+        <input type="checkbox" name="" id="black" class="color-filter" />
         <label for="black">Black</label>
 
-        <input type="checkbox" name="" id="white" class="color-filter">
+        <input type="checkbox" name="" id="white" class="color-filter" />
         <label for="white">White</label>
-       </div>
+      </div>
 
-       <div class="type-filter-container">
-        <input type="checkbox" name="" id="tamer" class="type-filter">
+      <div class="type-filter-container">
+        <input type="checkbox" name="" id="tamer" class="type-filter" />
         <label for="tamer">Tamer</label>
-        
-        <input type="checkbox" name="" id="digi-egg" class="type-filter">
+
+        <input type="checkbox" name="" id="digi-egg" class="type-filter" />
         <label for="digi-egg">Digi-Egg</label>
 
-        <input type="checkbox" name="" id="digimon" class="type-filter">
+        <input type="checkbox" name="" id="digimon" class="type-filter" />
         <label for="digimon">Digimon</label>
 
-        <input type="checkbox" name="" id="option" class="type-filter">
+        <input type="checkbox" name="" id="option" class="type-filter" />
         <label for="option">Option</label>
-       </div>
-
+      </div>
     </div>
 
     <main>
       <div id="card-container" class="card-container">
         <div class="card">
           <img
+            class="cardImage"
             src="https://images.digimoncard.io/images/cards/BT1-001.jpg"
             alt=""
           />
         </div>
       </div>
 
-      <div id="info-container">
-         
+      <div id="info-container" class="info-container">
+       <!--  <div class="infobar">
+          <h4>BT01-011</h4>
+          <h4>COMMON</h4>
+          <h4>Digi-Egg</h4>
+          <h4>Mega</h4>
+          <h4>1500</h4>
+          <button id="btnCloseDetailedInfo">X</button>
+        </div>
+        <div class="detailed-info">
+          <img
+            class="cardDImage"
+            src="https://images.digimoncard.io/images/cards/BT1-001.jpg"
+            alt=""
+          />
+          <div>
+            <h1>Greymon</h1>
+            <h3>Play cost: 15</h3>
+            <h3>Evolution cost: 4</h3>
+            <br>
+            <h2>MAIN EFFECT</h2>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus,
+              reprehenderit!
+            </p>
+            <br>
+            <h2>SOURCE EFFECT</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum reprehenderit iusto et architecto odit numquam hic modi iste doloremque exercitationem?</p>
+          </div>
+        </div>
+        <h2>PACK NAME:</h2>
+        <h4>BT-00 NEW ADVENTURE</h4> -->
       </div>
     </main>
 

@@ -6,6 +6,25 @@ const cardContainer = document.getElementById('card-container');
 const btnSearch = document.getElementById('searchButton');
 const textField = document.getElementById('searchField');
 
+
+const infoContainer = document.getElementById('info-container');
+textField.addEventListener('change', async (event) => {
+    let parameters = '';
+    let data;
+
+    
+    if(textField.value.length != 0)
+    {
+        parameters += `n=${textField.value}`;
+        data = await getData(parameters);  
+    }
+    else{
+        data = await getData();
+    }
+    
+    showCards(data);
+});
+
 //Filter cards by color
 const colorFilters = document.querySelectorAll('.color-filter');
 colorFilters.forEach(color => {
@@ -187,6 +206,13 @@ function showCards(cards = "") {
     cardImage.setAttribute("src", card.image_url);
     cardImage.setAttribute("alt", card.name);
 
+    cardImage.addEventListener('click', () => {
+        console.log(card);
+       // cardContainer.classList.add('hide');
+        createDetailedCardView(card);
+        infoContainer.classList.remove('hide');
+    });
+    
     cardDiv.appendChild(cardImage);
     cardContainer.appendChild(cardDiv);
   });
@@ -195,5 +221,134 @@ function showCards(cards = "") {
 async function initialize(){
     const cards = await getData();
     showCards(cards);
+}
+
+function createDetailedCardView(card){
+
+    infoContainer.innerHTML = '';
+    const br = document.createElement('br');
+
+    const infoBar = document.createElement('div');
+    infoBar.classList.add('infoBar');
+
+    const numberContainer = document.createElement('h4');
+    const cardNumber = document.createTextNode(card.cardnumber);
+    numberContainer.appendChild(cardNumber);
+
+    infoBar.appendChild(numberContainer);
+
+    const rarityContainer = document.createElement('h4');
+    const cardRarity = document.createTextNode(card.cardrarity);
+    rarityContainer.appendChild(cardRarity);
+    
+    infoBar.appendChild(rarityContainer);
+    
+    const typeContainer = document.createElement('h4');
+    const cardType = document.createTextNode(card.type);
+    typeContainer.appendChild(cardType);
+
+    infoBar.appendChild(typeContainer);
+
+    if(card.level != null)
+    {
+        const levelContainer = document.createElement('h4');
+        const cardLevel = document.createTextNode(`Level ${card.level}`);
+        levelContainer.appendChild(cardLevel);
+    }
+    
+    if(card.dp != null)
+    {
+        const dpContainer = document.createElement('h4');
+        const cardDp = document.createTextNode(card.dp);
+        dpContainer.appendChild(cardDp);
+        infoBar.appendChild(dpContainer);
+    }
+
+    const btnCloseDetailedButton = document.createElement('button');
+    const closeSymbol  = document.createTextNode('X');
+    btnCloseDetailedButton.appendChild(closeSymbol);
+
+    btnCloseDetailedButton.addEventListener('click', () => 
+    {
+        infoContainer.classList.add('hide');
+        cardContainer.classList.remove('hide');
+    });
+
+    infoBar.appendChild(btnCloseDetailedButton);
+    
+
+    infoBar.classList.add('infobar');
+    infoContainer.appendChild(infoBar);
+    
+
+    const detailedInfo = document.createElement('div');
+    const cardImage = document.createElement('img');
+    cardImage.setAttribute('src', card.image_url);
+
+    detailedInfo.appendChild(cardImage);
+    detailedInfo.classList.add('detailed-info');
+    
+
+    const detailedTextContainer = document.createElement('div');
+    
+    const nameContainer = document.createElement('h1');
+    const cardName = document.createTextNode(card.name);
+    nameContainer.appendChild(cardName);
+    detailedTextContainer.appendChild(nameContainer);
+
+    if(card.play_cost != null)
+    {
+        const pcContainer = document.createElement('h3');
+        const cardPc = document.createTextNode(`Play Cost: ${card.play_cost}`);
+        pcContainer.appendChild(cardPc);
+        detailedTextContainer.appendChild(pcContainer);
+    }
+    
+
+    if(card.evolution_cost != null)
+    {
+        const evoCostContainer = document.createElement('h3');
+        const cardEvoCost = document.createTextNode(`Evolution Cost: ${card.evolution_cost}`);
+        evoCostContainer.appendChild(cardEvoCost);
+        evoCostContainer.appendChild(br);
+        detailedTextContainer.appendChild(evoCostContainer);
+    }
+    
+    if(card.maineffect != null){
+        const mainEffectContainer = document.createElement('h2');
+        const cardMainEffect = document.createTextNode('Main Effect: ');
+        const meTextContainer = document.createElement('p');
+        const cardMEText = document.createTextNode(card.maineffect);
+        mainEffectContainer.appendChild(cardMainEffect);
+        meTextContainer.appendChild(cardMEText);
+        meTextContainer.appendChild(br);
+        detailedTextContainer.append(mainEffectContainer);
+        detailedTextContainer.append(meTextContainer);
+    }
+
+    if(card.soureeffect != null)
+    {
+        const sourceEffectContainer = document.createElement('h2');
+        const cardSourceEffect = document.createTextNode('Source Effect: ');
+        sourceEffectContainer.appendChild(cardSourceEffect);
+    
+        const seTextContainer = document.createElement('p');
+        const CardSEText = document.createTextNode(card.soureeffect);
+        seTextContainer.appendChild(CardSEText);
+
+        detailedTextContainer.append(sourceEffectContainer);
+        detailedTextContainer.append(seTextContainer);
+    }
+
+    detailedTextContainer.classList.add('detailedInfo');
+    detailedInfo.appendChild(detailedTextContainer);
+    infoContainer.appendChild(detailedInfo);
+    
+
+
+   
+
+    
+
 }
 initialize();
