@@ -40,7 +40,7 @@ textField.addEventListener('change', async (event) => {
         data = await getData();
     }
     
-    showCards(data);
+    showCards(data, 0, 2000, true, false);
 });
 
 //Filter cards by color
@@ -90,7 +90,7 @@ colorFilters.forEach(color => {
             }
         }
             const data = await getData(parameters);
-            showCards(data);
+            showCards(data, 0, 2000, true, false);
 })});
 
 
@@ -147,7 +147,7 @@ typeFilters.forEach(type => {
             }
         }
         const data = await getData(parameters);
-        showCards(data);
+        showCards(data, 0, 2000, true, false);
     });
     
 });
@@ -187,7 +187,7 @@ btnSearch.addEventListener('click', async () => {
     initializeFilters(colorFilters);
     initializeFilters(typeFilters);
     const data = await getData('n=' + textField.value + '&');
-    showCards(data);
+    showCards(data, 0, 2000, true, false);
 }
 );
 
@@ -197,12 +197,9 @@ textField.addEventListener('keydown', async function(event) {
         initializeFilters(typeFilters);
         initializeFilters(colorFilters);
         const data = await getData('n=' + textField.value + '&');
-        showCards(data);
+        showCards(data, 0, 2000, true, false);
     }
 });
-
-
-
 
 async function getData(urlParameters = "") {
   if (urlParameters.length != 0) {
@@ -221,40 +218,64 @@ async function getData(urlParameters = "") {
   }
 }
 
-function showCards(cards = null) {
+function showCards(cards = null, start = 0, end = 2000, cleanContainer = false, addObserver = false) {
+    let counter = 0;
     console.log(cards);
-    cardContainer.innerHTML = "";
+    if(cleanContainer)
+    {
+        cardContainer.innerHTML = "";
+    }
+    
     if(cards != null)
     {
         errorContainer.classList.add('hide');
         cards.forEach((card) => {
-            const cardDiv = document.createElement("div");
-            cardDiv.classList.add("card");
-            const cardImage = document.createElement("img");
-            cardImage.setAttribute("src", card.image_url);
-            cardImage.setAttribute("alt", card.name);
-        
-            cardImage.addEventListener('click', () => {
-                console.log(card);
-               // cardContainer.classList.add('hide');
-                createDetailedCardView(card);
-                infoContainer.classList.remove('hide');
-            });
-            cardDiv.appendChild(cardImage);
-            cardContainer.appendChild(cardDiv);
+            counter++;
+            
+            if(counter >= start && counter <= end ){
+                //console.log(counter);
+                const cardDiv = document.createElement("div");
+                cardDiv.classList.add("card");
+                const cardImage = document.createElement("img");
+                cardImage.setAttribute("src", card.image_url);
+                cardImage.setAttribute("alt", card.name);
+            
+                cardImage.addEventListener('click', () => {
+                    console.log(card);
+                    createDetailedCardView(card);
+                    infoContainer.classList.remove('hide');
+                });
+                cardDiv.appendChild(cardImage);
+                cardContainer.appendChild(cardDiv);
+            }
+            else
+            {
+                return;
+            }
           });
     }
     else{
-        errorContainer.classList.remove('hide');
-       
+         errorContainer.classList.remove('hide');
     }
+
+    if(lastCard)
+    {
+        observer.unobserve(lastCard);
+    }
+    if(addObserver)
+    {
+        const cardOnScreen = document.querySelectorAll('.card-container .card');
+        lastCard = cardOnScreen[cardOnScreen.length - 1];
+        observer.observe(lastCard);
+    }
+    
 
   
 }
 
 async function initialize(){
     const cards = await getData();
-    showCards(cards);
+    showCards(cards, 0, 100, true, true);
 }
 
 function createDetailedCardView(card){
@@ -405,3 +426,26 @@ function replaceSpecialCharacters(text){
     
 }
 initialize();
+
+
+let start = 0;
+let end = 100;
+let lastCard;
+
+let observer = new IntersectionObserver((entries, observer)  => {
+    
+    entries.forEach(async (entry) => {
+      if(entry.isIntersecting)
+      {
+        start = end + 1;
+        end += 100;
+        console.log(`Start: ${start}, End: ${end}`);
+        const data = await getData();
+        showCards(data, start, end, false, true);
+      }  
+    });
+
+}, {
+    rootMargin: '0px 0px 300px 0px',
+    threshold: 1.0
+} );
