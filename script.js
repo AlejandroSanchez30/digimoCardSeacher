@@ -12,6 +12,8 @@ const typeFilterContainer = document.getElementById('type-filter-container');
 const btnFilters = document.getElementById('buttonFilters');
 
 btnFilters.addEventListener('click', () => {
+
+    
     if(colorFilterContainer.classList.contains('hide'))
     {
         colorFilterContainer.classList.remove('hide');
@@ -21,8 +23,14 @@ btnFilters.addEventListener('click', () => {
     {
         colorFilterContainer.classList.add('hide');
         typeFilterContainer.classList.add('hide');
+        
     }
    
+});
+
+const btnTop = document.getElementById('btnTop');
+btnTop.addEventListener('click', () => {
+    window.scroll(0,0);
 });
 
 const infoContainer = document.getElementById('info-container');
@@ -374,22 +382,28 @@ function createDetailedCardView(card){
         detailedTextContainer.append(seTextContainer);
     }
 
+    let additionalInfoContainer = document.createElement('div');
+    additionalInfoContainer.classList.add('additional-info-container')
     if(card.artist != null)
     {
+        //additionalInfoContainer = document.createElement('div');
+        ;
         var artistTitle = document.createElement('h2');
         artistTitle.innerHTML ='Artist: ';
         var cardArtist = document.createElement('h4');
         cardArtist.innerHTML = card.artist;
+        additionalInfoContainer.appendChild(artistTitle);
+        additionalInfoContainer.appendChild(cardArtist);
     }
+    const wikiaLink = document.createElement('a');
+    wikiaLink.innerHTML = 'More info';
+    wikiaLink.setAttribute('href', `https://digimoncardgame.fandom.com/wiki/${card.cardnumber}`);
+    additionalInfoContainer.appendChild(wikiaLink);
 
     detailedTextContainer.classList.add('detailedInfo');
     detailedInfo.appendChild(detailedTextContainer);
     infoContainer.appendChild(detailedInfo);
-    if(card.artist != null)
-    {
-        infoContainer.appendChild(artistTitle);
-        infoContainer.appendChild(cardArtist);
-    }
+    infoContainer.appendChild(additionalInfoContainer);
 }
 
 function replaceSpecialCharacters(text){
