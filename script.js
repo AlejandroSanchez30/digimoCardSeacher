@@ -40,7 +40,7 @@ textField.addEventListener('change', async (event) => {
         data = await getData();
     }
     
-    showCards(data, 0, 2000, true, false);
+    showCards(data);
 });
 
 //Filter cards by color
@@ -90,7 +90,7 @@ colorFilters.forEach(color => {
             }
         }
             const data = await getData(parameters);
-            showCards(data, 0, 2000, true, false);
+            showCards(data);
 })});
 
 
@@ -147,7 +147,7 @@ typeFilters.forEach(type => {
             }
         }
         const data = await getData(parameters);
-        showCards(data, 0, 2000, true, false);
+        showCards(data);
     });
     
 });
@@ -187,7 +187,7 @@ btnSearch.addEventListener('click', async () => {
     initializeFilters(colorFilters);
     initializeFilters(typeFilters);
     const data = await getData('n=' + textField.value + '&');
-    showCards(data, 0, 2000, true, false);
+    showCards(data);
 }
 );
 
@@ -197,7 +197,7 @@ textField.addEventListener('keydown', async function(event) {
         initializeFilters(typeFilters);
         initializeFilters(colorFilters);
         const data = await getData('n=' + textField.value + '&');
-        showCards(data, 0, 2000, true, false);
+        showCards(data);
     }
 });
 
@@ -218,64 +218,35 @@ async function getData(urlParameters = "") {
   }
 }
 
-function showCards(cards = null, start = 0, end = 2000, cleanContainer = false, addObserver = false) {
-    let counter = 0;
-    console.log(cards);
-    if(cleanContainer)
-    {
-        cardContainer.innerHTML = "";
-    }
-    
-    if(cards != null)
-    {
-        errorContainer.classList.add('hide');
-        cards.forEach((card) => {
-            counter++;
-            
-            if(counter >= start && counter <= end ){
-                //console.log(counter);
-                const cardDiv = document.createElement("div");
-                cardDiv.classList.add("card");
-                const cardImage = document.createElement("img");
-                cardImage.setAttribute("src", card.image_url);
-                cardImage.setAttribute("alt", card.name);
-            
-                cardImage.addEventListener('click', () => {
-                    console.log(card);
-                    createDetailedCardView(card);
-                    infoContainer.classList.remove('hide');
-                });
-                cardDiv.appendChild(cardImage);
-                cardContainer.appendChild(cardDiv);
-            }
-            else
-            {
-                return;
-            }
-          });
-    }
-    else{
-         errorContainer.classList.remove('hide');
-    }
+function showCards(cards = null, cleanContainer = true) {
+  let counter = 0;
+  if (cleanContainer) {
+    cardContainer.innerHTML = "";
+  }
 
-    if(lastCard)
-    {
-        observer.unobserve(lastCard);
-    }
-    if(addObserver)
-    {
-        const cardOnScreen = document.querySelectorAll('.card-container .card');
-        lastCard = cardOnScreen[cardOnScreen.length - 1];
-        observer.observe(lastCard);
-    }
-    
-
-  
+  if (cards != null) {
+    errorContainer.classList.add("hide");
+    cards.forEach((card) => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+      const cardImage = document.createElement("img");
+      cardImage.setAttribute("src", card.image_url);
+      cardImage.setAttribute("alt", card.name);
+      cardImage.addEventListener("click", () => {
+        createDetailedCardView(card);
+        infoContainer.classList.remove("hide");
+      });
+      cardDiv.appendChild(cardImage);
+      cardContainer.appendChild(cardDiv);
+    });
+  } else {
+    errorContainer.classList.remove("hide");
+  }
 }
 
 async function initialize(){
     const cards = await getData();
-    showCards(cards, 0, 100, true, true);
+    showCards(cards);
 }
 
 function createDetailedCardView(card){
@@ -403,19 +374,22 @@ function createDetailedCardView(card){
         detailedTextContainer.append(seTextContainer);
     }
 
-    const packContainer = document.createElement('h2');
-    const packTitle = document.createTextNode('Artist: ')
-    const cardPackContainer = document.createElement('h4');
-    const cardPack = document.createTextNode(card.artist);
-
-    packContainer.appendChild(packTitle);
-    cardPackContainer.appendChild(cardPack);
+    if(card.artist != null)
+    {
+        var artistTitle = document.createElement('h2');
+        artistTitle.innerHTML ='Artist: ';
+        var cardArtist = document.createElement('h4');
+        cardArtist.innerHTML = card.artist;
+    }
 
     detailedTextContainer.classList.add('detailedInfo');
     detailedInfo.appendChild(detailedTextContainer);
     infoContainer.appendChild(detailedInfo);
-    infoContainer.appendChild(packContainer);
-    infoContainer.appendChild(cardPackContainer);
+    if(card.artist != null)
+    {
+        infoContainer.appendChild(artistTitle);
+        infoContainer.appendChild(cardArtist);
+    }
 }
 
 function replaceSpecialCharacters(text){
@@ -432,7 +406,7 @@ let start = 0;
 let end = 100;
 let lastCard;
 
-let observer = new IntersectionObserver((entries, observer)  => {
+/* let observer = new IntersectionObserver((entries, observer)  => {
     
     entries.forEach(async (entry) => {
       if(entry.isIntersecting)
@@ -441,11 +415,11 @@ let observer = new IntersectionObserver((entries, observer)  => {
         end += 100;
         console.log(`Start: ${start}, End: ${end}`);
         const data = await getData();
-        showCards(data, start, end, false, true);
+        showCards(data);
       }  
     });
 
 }, {
     rootMargin: '0px 0px 300px 0px',
     threshold: 1.0
-} );
+} ); */
