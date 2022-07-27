@@ -25,14 +25,10 @@ btnFilters.addEventListener('click', async () => {
         colorFilterContainer.classList.add('hide');
         typeFilterContainer.classList.add('hide');
         let data = null;
-        if(textField.value.length > 0)
-        {
-            data = await getData(textField.value);
-        }
-        else
-        {
-            data = await getData();
-        }
+        let parameters = getSearchParameters();
+        data = await getData(parameters);
+        start = 0;
+        end = 20;
         showCards(data);
     }
    
@@ -45,7 +41,7 @@ btnTop.addEventListener('click', () => {
 
 const infoContainer = document.getElementById('info-container');
 
-textField.addEventListener('change', async (event) => {
+/* textField.addEventListener('change', async (event) => {
     let parameters = '';
     let data;
 
@@ -60,111 +56,30 @@ textField.addEventListener('change', async (event) => {
     }
     
     showCards(data);
-});
+}); */
 
 //Filter cards by color
 const colorFilters = document.querySelectorAll('.color-filter');
 colorFilters.forEach(color => {
     color.addEventListener('click', async function (event) {
-        let parameters = '';
-        if(color.checked){
-            uncheckOthersFilters(colorFilters, color.id);
-            if(textField.value.length != 0)
-            {
-                parameters += `n=${textField.value}`;
-                const activeType = checkActiveFilter(typeFilters);
-                if(activeType != null){
-                    parameters +=`&type=${activeType}`;
-                }
-                parameters +=`&color=${color.id}`;
-            }
-            else{
-                const activeType = checkActiveFilter(typeFilters);
-               
-                if(activeType != null){
-                    
-                    parameters +=`&type=${activeType}&color=${color.id}`;
-                }
-                else{
-                    parameters +=`color=${color.id}`;
-                }
-            }
-        }
-        else{
-            if(textField.value.length =! 0)
-            {
-                parameters += `n=${textField.value}`;
-                const colorActive = (checkActiveFilter(colorFilters));
-                if(colorActive != null)
-                {
-                    parameters += `&color=${colorActive}`;
-                }
-            }
-            else{
-                const colorActive = (checkActiveFilter(colorFilters));
-                if(colorActive != null)
-                {
-                    parameters += `&color=${colorActive}`;
-                }
-            }
-        }
-            const data = await getData(parameters);
-            showCards(data);
-})});
+        uncheckOthersFilters(colorFilters, color.id);
+        let parameters = getSearchParameters();
+        start = 0;
+        end = 20;
+        const data = await getData(parameters);
+        showCards(data);
+    })
+});
 
 
 //Filter card by type
 const typeFilters = document.querySelectorAll('.type-filter');
 typeFilters.forEach(type => {
     type.addEventListener('click', async function () {
-        let parameters = '';
-        if(type.checked){
-            uncheckOthersFilters(typeFilters, type.id);
-            if(textField.value.length != 0)
-            {
-                parameters += `n=${textField.value}`;
-                
-                const colorActive = checkActiveFilter(colorFilters);
-                if(colorActive != null)
-                {
-                    parameters += `&color=${colorActive}&type=${type.id}`;
-                }
-                else{
-                    parameters +=`&type=${type.id}`;
-                }
-            }
-            else{
-
-                const colorActive = checkActiveFilter(colorFilters);
-                
-                if(colorActive != null)
-                {
-                    parameters += `color=${colorActive}&type=${type.id}`;
-                }
-                else{
-                    parameters += `type=${type.id}`
-                }
-            }
-        }
-        else{
-            if(textField.value.length != 0)
-            {
-                parameters += `n=${textField.value}`;
-                const activeFilter = checkActiveFilter(colorFilters);
-                if(activeFilter != null)
-                {
-                    parameters += `&color=${activeFilter}`;
-                }
-            }
-            else
-            {
-                const activeFilter = checkActiveFilter(colorFilters);
-                if(activeFilter != null)
-                {
-                    parameters += `&color=${activeFilter}`;
-                }
-            }
-        }
+        uncheckOthersFilters(typeFilters, type.id);
+        let parameters = getSearchParameters();
+        start = 0;
+        end = 20;
         const data = await getData(parameters);
         showCards(data);
     });
@@ -200,12 +115,12 @@ function uncheckOthersFilters(filtersContainer, idActiveFilter)
     });
 }
 
-
-
 btnSearch.addEventListener('click', async () => {
     initializeFilters(colorFilters);
     initializeFilters(typeFilters);
     const data = await getData('n=' + textField.value + '&');
+    start = 0;
+    end = 20;
     showCards(data);
 }
 );
@@ -237,35 +152,57 @@ async function getData(urlParameters = "") {
   }
 }
 
-function showCards(cards = null, cleanContainer = true) {
-  let counter = 0;
-  if (cleanContainer) {
-    cardContainer.innerHTML = "";
-  }
-
-  if (cards != null) {
-    errorContainer.classList.add("hide");
-    cards.forEach((card) => {
-      const cardDiv = document.createElement("div");
-      cardDiv.classList.add("card");
-      const cardImage = document.createElement("img");
-      cardImage.setAttribute("src", card.image_url);
-      cardImage.setAttribute("alt", card.name);
-      cardImage.addEventListener("click", () => {
-        createDetailedCardView(card);
-        infoContainer.classList.remove("hide");
-      });
-      cardDiv.appendChild(cardImage);
-      cardContainer.appendChild(cardDiv);
-    });
-  } else {
-    errorContainer.classList.remove("hide");
-  }
+function showCards(cards = null, cleanContainer = true, infineScroll = false) {
+    
+    
+    if (cards != null) {
+        let finalIndex = end;
+    if(end > cards.length)
+    {
+        finalIndex = cards.length;
+        end = finalIndex;
+    }
+    if (cleanContainer) {
+      cardContainer.innerHTML = "";
+    }
+    console.log(`Resultados: ${cards.length} Inicio: ${start}, Final: ${finalIndex}`);
+      errorContainer.classList.add("hide");
+      let counter = 0;
+      if(start < cards.length && finalIndex <= cards.length){
+        cards.forEach((card) => {
+            counter++;
+    
+            if (counter > start && counter <= finalIndex) {
+              const cardDiv = document.createElement("div");
+              cardDiv.classList.add("card");
+              const cardImage = document.createElement("img");
+              cardImage.setAttribute("src", card.image_url);
+              cardImage.setAttribute("alt", card.name);
+              cardImage.addEventListener("click", () => {
+                createDetailedCardView(card);
+                infoContainer.classList.remove("hide");
+              });
+              cardDiv.appendChild(cardImage);
+              cardContainer.appendChild(cardDiv);
+            }
+          });
+              if(lastCard)
+              {
+                  observer.unobserve(lastCard);
+              }
+              const cardsOnScreen = document.querySelectorAll('.card-container .card');
+              lastCard = cardsOnScreen[cardsOnScreen.length - 1] 
+              observer.observe(lastCard);
+      }
+    } else {
+        cardContainer.innerHTML = '';
+      errorContainer.classList.remove("hide");
+    }
 }
 
 async function initialize(){
     const cards = await getData();
-    showCards(cards);
+    showCards(cards, true, start, end);
 }
 
 function createDetailedCardView(card){
@@ -405,11 +342,8 @@ function createDetailedCardView(card){
         //additionalInfoContainer = document.createElement('div');
         ;
         var artistTitle = document.createElement('h2');
-        artistTitle.innerHTML ='Artist: ';
-        var cardArtist = document.createElement('h4');
-        cardArtist.innerHTML = card.artist;
+        artistTitle.innerHTML =`Artist: ${card.artist}`;
         additionalInfoContainer.appendChild(artistTitle);
-        additionalInfoContainer.appendChild(cardArtist);
     }
     const wikiaLink = document.createElement('a');
     wikiaLink.innerHTML = 'More info';
@@ -439,24 +373,59 @@ initialize();
 
 
 let start = 0;
-let end = 100;
+let end = 20;
 let lastCard;
 
-/* let observer = new IntersectionObserver((entries, observer)  => {
+let observer = new IntersectionObserver((entries, observer)  => {
     
     entries.forEach(async (entry) => {
       if(entry.isIntersecting)
       {
-        start = end + 1;
-        end += 100;
-        console.log(`Start: ${start}, End: ${end}`);
-        const data = await getData();
-        showCards(data);
+        start = end;
+        end += 20;
+        const data = await getData(getSearchParameters());
+        showCards(data, false);
+        console.log("Intersección");
       }  
     });
 
 }, {
-    rootMargin: '0px 0px 300px 0px',
-    threshold: 1.0
-} ); */
+    rootMargin: '0px 0px 200px 0px',
+    threshold: 0.1
+} ); 
 
+function getSearchParameters()
+{
+    let parameters = '';
+    let colorActive = checkActiveFilter(colorFilters);
+    let typeActive = checkActiveFilter(typeFilters);
+    if(textField.value.length > 0)
+    {
+        parameters += `n=${textField.value}`;
+        if(colorActive != null)
+        {
+            parameters += `&color=${colorActive}`;
+            if(typeActive != null)
+            {
+                parameters += `&type=${typeActive}`;
+            }
+        }
+        else{
+            if(colorActive != null)
+            {
+                parameters += `color=${colorActive}`;
+            }
+            else
+            {
+                if(typeActive != null)
+                {
+                    parameters += `type=${typeActive}`;
+                }
+            }
+        }
+    }
+    
+    console.log(parameters);
+    return parameters;
+    
+}
