@@ -71,7 +71,6 @@ colorFilters.forEach(color => {
     })
 });
 
-
 //Filter card by type
 const typeFilters = document.querySelectorAll('.type-filter');
 typeFilters.forEach(type => {
@@ -386,6 +385,7 @@ let observer = new IntersectionObserver((entries, observer)  => {
         const data = await getData(getSearchParameters());
         showCards(data, false);
         console.log("Intersección");
+        console.log(entries);
       }  
     });
 
