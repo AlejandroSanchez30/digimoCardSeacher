@@ -11,8 +11,7 @@ const colorFilterContainer = document.getElementById('color-filters-container');
 const typeFilterContainer = document.getElementById('type-filter-container');
 const btnFilters = document.getElementById('buttonFilters');
 
-btnFilters.addEventListener('click', () => {
-
+btnFilters.addEventListener('click', async () => {
     
     if(colorFilterContainer.classList.contains('hide'))
     {
@@ -21,9 +20,20 @@ btnFilters.addEventListener('click', () => {
     }
     else
     {
+        initializeFilters(colorFilters);
+        initializeFilters(typeFilters);
         colorFilterContainer.classList.add('hide');
         typeFilterContainer.classList.add('hide');
-        
+        let data = null;
+        if(textField.value.length > 0)
+        {
+            data = await getData(textField.value);
+        }
+        else
+        {
+            data = await getData();
+        }
+        showCards(data);
     }
    
 });
@@ -34,6 +44,7 @@ btnTop.addEventListener('click', () => {
 });
 
 const infoContainer = document.getElementById('info-container');
+
 textField.addEventListener('change', async (event) => {
     let parameters = '';
     let data;
@@ -260,6 +271,8 @@ async function initialize(){
 function createDetailedCardView(card){
 
     infoContainer.innerHTML = '';
+    infoContainer.style.backgroundColor=`var(--card-${card.color})`;
+    
     const br = document.createElement('br');
 
     const infoBar = document.createElement('div');
@@ -315,6 +328,9 @@ function createDetailedCardView(card){
     {
         infoContainer.classList.add('hide');
         cardContainer.classList.remove('hide');
+
+        infoContainer.style.color=`var(--card-White)`;
+        btnCloseDetailedButton.style.color = `var(--card-White)`;
     });
     infoBar.appendChild(btnCloseDetailedButton);
     
@@ -404,6 +420,12 @@ function createDetailedCardView(card){
     detailedInfo.appendChild(detailedTextContainer);
     infoContainer.appendChild(detailedInfo);
     infoContainer.appendChild(additionalInfoContainer);
+
+    if(card.color == 'White' || card.color == 'Yellow')
+    {
+        infoContainer.style.color=`var(--card-Black)`;
+        btnCloseDetailedButton.style.color = `var(--card-Black)`;
+    }
 }
 
 function replaceSpecialCharacters(text){
@@ -437,3 +459,4 @@ let lastCard;
     rootMargin: '0px 0px 300px 0px',
     threshold: 1.0
 } ); */
+

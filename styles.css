@@ -1,3 +1,13 @@
+:root {
+    --card-Red: #D61C4E;
+    --card-Blue: #1F4690;
+    --card-Yellow: #F9D923 ;
+    --card-Green: #6BCB77 ;
+    --card-Purple: #7A4495;
+    --card-Black: #100F0F;
+    --card-White: #F9F9F9;
+  }
+
 *{
     box-sizing: border-box;
     margin: 0;
@@ -11,7 +21,7 @@ html{
 }
 body{
     background-color: #293045;
-    color: #ececec;
+   
 }
 
 .card-container{
@@ -48,11 +58,12 @@ main{
 }
 
 .info-container{
+    color: white;
     margin-top: 2rem;
     width: 90vw;
     /* height: 300px; */
     border-radius: 5px;
-    background-color: #d89c12;
+    /* background-color: #d89c12; */
     z-index: 3;
     position: fixed;
     top: 10vh;
@@ -92,17 +103,18 @@ main{
 }
 
 .btnClose{
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 1.5rem;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    color: white;
 }
 
 
 .search{
     text-align: center;
+    color: #ececec;
 }
 
 .button-search{
@@ -118,6 +130,7 @@ main{
 
 
 .header{
+    color: #ececec;
     text-align: center;
     margin: 1rem;
 }
