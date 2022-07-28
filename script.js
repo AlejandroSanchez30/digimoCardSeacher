@@ -66,6 +66,7 @@ async function getData(urlParameters = "") {
     }
   }
   
+  const imageSkeleton = document.getElementById('cardSkeleton');
 //Display the cards received as parameter
 function showCards(cards = null, cleanContainer = true) {
  if(cards != null)
@@ -77,6 +78,7 @@ function showCards(cards = null, cleanContainer = true) {
     cards.forEach((card) => {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card");
+        cardDiv.classList.add("loading");
         const cardImage = document.createElement("img");
         cardImage.setAttribute("loading", "lazy");
         cardImage.setAttribute("src", card.image_url);
@@ -85,12 +87,17 @@ function showCards(cards = null, cleanContainer = true) {
           createDetailedCardView(card);
           infoContainer.classList.remove("hide");
         });
+        cardImage.addEventListener('load', () => {
+          cardDiv.classList.remove('loading');
+          console.log("image loaded");
+        });
+        
         cardDiv.appendChild(cardImage);
         cardContainer.appendChild(cardDiv);
+        
     });
  }
 }
-  
 
 //Creates a window with detailed information of the card sent as parameter
 function createDetailedCardView(card){
@@ -259,43 +266,6 @@ function replaceSpecialCharacters(text){
       
   }
 
-  function getSearchParameters() {
-  let parameters = "";
-  let colorActive = checkActiveFilter(colorFilters);
-  let typeActive = checkActiveFilter(typeFilters);
-
-  console.log("color: " + colorActive);
-  if (textField.value.length > 0) {
-    parameters += `n=${textField.value}`;
-    if (colorActive != null) {
-      parameters += `&color=${colorActive}`;
-      if (typeActive != null) {
-        parameters += `&type=${typeActive}`;
-      }
-    } else {
-      if (colorActive != null) {
-        parameters += `color=${colorActive}`;
-      } else {
-        if (typeActive != null) {
-          parameters += `type=${typeActive}`;
-        }
-      }
-    }
-  } else {
-    if (colorActive != null) {
-      parameters += `color=${colorActive}`;
-      if (typeActive != null) {
-        parameters += `&type=${typeActive}`;
-      }
-    } else {
-      if (typeActive != null) {
-        parameters += `type=${typeActive}`;
-      }
-    }
-  }
-  return parameters;
-}
-
 //Checks the input text and checkboxes and gets the parameters
 //to make the call to the API
 function getSearchParameters() {
@@ -425,3 +395,4 @@ async function initialize(){
 }
 
 initialize();
+

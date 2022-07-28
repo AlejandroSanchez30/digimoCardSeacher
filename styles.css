@@ -152,21 +152,31 @@ main{
     
 }
 
-.card-container-loading{
-    background-color: white;
+ 
+.loading{
+    position: relative;
+}
+.loading::before
+{
+    content: '';
+    
     width: 150px;
     height: 200px;
-    min-width: 150px;
+    min-height: 200px;
     margin: 10px;
     border-radius: 10px;
-    animation: loading-skeleton infinite 1.5s;
+    position: absolute;
+    z-index: 10;
+    background: linear-gradient(90deg, #dddddd, #f9f9f9, #dddddd);
+    background-size: 200%;
+    animation: skeleton 1s infinite reverse;
 }
 
-@keyframes loading-skeleton {
-    0%, 100%{
-      opacity: 100%;
+@keyframes skeleton {
+    0% {
+        background-position: -100% 0;
     }
-    50%{
-      opacity: 0%;
+    100% {
+        background-position: 100% 0;
     }
-  }
+}
