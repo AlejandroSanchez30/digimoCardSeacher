@@ -151,3 +151,22 @@ main{
     top: 50vh;
     
 }
+
+.card-container-loading{
+    background-color: white;
+    width: 150px;
+    height: 200px;
+    min-width: 150px;
+    margin: 10px;
+    border-radius: 10px;
+    animation: loading-skeleton infinite 1.5s;
+}
+
+@keyframes loading-skeleton {
+    0%, 100%{
+      opacity: 100%;
+    }
+    50%{
+      opacity: 0%;
+    }
+  }
